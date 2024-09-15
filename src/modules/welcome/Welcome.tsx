@@ -15,7 +15,7 @@ export default () => {
     useEffect(() => {
         setTimeout(() => {
             startLogin()
-        }, 3000)
+        }, 0)
     }, []);
 
     const startLogin = () => {
