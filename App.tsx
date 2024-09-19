@@ -10,6 +10,7 @@ import {SafeAreaProvider} from "react-native-safe-area-context";
 import {NavigationContainer} from '@react-navigation/native';
 import Welcome from "./src/modules/welcome/Welcome";
 import Login from "./src/modules/login/Login";
+import HomeTab from "./src/modules/home/HomeTab";
 import {
     SafeAreaView,
     StatusBar,
@@ -44,8 +45,12 @@ function App(): React.JSX.Element {
                         headerShown: false,
                     }}
                     />
+                    <Stack.Screen name="HomeTab" component={HomeTab} options={{
+                        //TODO
+                        headerShown: false,
+                    }}
+                    />
                 </Stack.Navigator>
-
             </NavigationContainer>
         </SafeAreaProvider>
     );
