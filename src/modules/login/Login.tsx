@@ -7,12 +7,16 @@ import {
     TouchableOpacity,
     Linking,
     TextInput,
-    LayoutAnimation
+    LayoutAnimation,
+    ToastAndroid
 } from 'react-native'
+import {flow} from "mobx";
 
 import {useNavigation} from "@react-navigation/native";
 import {StackNavigationProp} from "@react-navigation/stack";
-import { formatPhone,replaceBlank } from '../../utils/StringUtil'
+import {formatPhone, replaceBlank} from '../../utils/StringUtil'
+
+import UserStore from "../../stores/UserStore";
 
 import icon_logo_main from '../../assets/icon_main_logo.png'
 import icon_unselected from '../../assets/icon_unselected.png'
@@ -35,7 +39,7 @@ export default () => {
 
     const [eyeOpen, setEyeOpen] = useState<boolean>(true)
 
-    const [phone, setPhone] = useState<String>("")
+    const [phone, setPhone] = useState<string>("")
 
     const [pwd, setPwd] = useState<string>("")
 
@@ -227,62 +231,62 @@ export default () => {
                 width: 16,
                 height: 16,
             },
-            codeLoginTxt:{
+            codeLoginTxt: {
                 fontSize: 14,
-                color:"#303080",
-                flex:1,
-                marginLeft:4
+                color: "#303080",
+                flex: 1,
+                marginLeft: 4
             },
-            forgetPwdTxt:{
+            forgetPwdTxt: {
                 fontSize: 14,
-                color:"303080",
+                color: "303080",
             },
-            loginButton:{
-                width:"100%",
-                height:56,
-                backgroundColor:'#ff2442',
-                justifyContent:'center',
+            loginButton: {
+                width: "100%",
+                height: 56,
+                backgroundColor: '#ff2442',
+                justifyContent: 'center',
                 alignItems: 'center',
-                borderRadius:28,
-                marginTop:20
+                borderRadius: 28,
+                marginTop: 20
             },
-            loginButtonDisable:{
-                width:"100%",
-                height:56,
-                backgroundColor:'#dddddd',
-                justifyContent:'center',
+            loginButtonDisable: {
+                width: "100%",
+                height: 56,
+                backgroundColor: '#dddddd',
+                justifyContent: 'center',
                 alignItems: 'center',
-                borderRadius:28,
-                marginTop:20
+                borderRadius: 28,
+                marginTop: 20
             },
-            loginTxt:{
-                fontSize:20,
-                color:'white'
+            loginTxt: {
+                fontSize: 20,
+                color: 'white'
             },
-            wxqqLayout:{
-                width:"100%",
-                flexDirection:'row',
-                marginTop:54,
-                justifyContent:'center',
+            wxqqLayout: {
+                width: "100%",
+                flexDirection: 'row',
+                marginTop: 54,
+                justifyContent: 'center',
             },
-            iconWx:{
-                width:50,
-                height:50,
-                marginRight:60
+            iconWx: {
+                width: 50,
+                height: 50,
+                marginRight: 60
             },
-            iconQq:{
-                width:50,
-                height:50,
-                marginLeft:60
+            iconQq: {
+                width: 50,
+                height: 50,
+                marginLeft: 60
             },
-            closeButton:{
-                position:'absolute',
-                left:36,
-                top:24
+            closeButton: {
+                position: 'absolute',
+                left: 36,
+                top: 24
             },
-            closeImg:{
-                width:28,
-                height:28,
+            closeImg: {
+                width: 28,
+                height: 28,
             }
         })
         const canLogin = phone?.length === 13 && pwd?.length === 6
@@ -330,14 +334,20 @@ export default () => {
                     <Text style={styles.forgetPwdTxt}>忘记密码？</Text>
                 </View>
 
-                <TouchableOpacity style={canLogin?styles.loginButton:styles.loginButtonDisable}
-                activeOpacity={canLogin?0.7:1} onPress={() => {
+                <TouchableOpacity style={canLogin ? styles.loginButton : styles.loginButtonDisable}
+                                  activeOpacity={canLogin ? 0.7 : 1} onPress={() => {
                     const purePhone = replaceBlank(phone);
-                    if (!canLogin||!checked) {
+                    const purePwd = replaceBlank(pwd);
+                    if (!canLogin || !checked) {
                         return
                     }
-                    //TODO 去登陆
-                    navigation.replace('HomeTab');
+                    UserStore.requestLogin(purePhone, purePwd, (success: boolean) => {
+                        if (success) {
+                            navigation.replace('HomeTab')
+                        } else {
+                            ToastAndroid.show("登陆失败，请检查用户名和密码", ToastAndroid.LONG)
+                        }
+                    })
                 }}>
                     <Text style={styles.loginTxt}>登陆</Text>
                 </TouchableOpacity>
@@ -365,7 +375,7 @@ export default () => {
                     <Image style={styles.iconQq} source={icon_qq}/>
                 </View>
 
-                <TouchableOpacity style={styles.closeButton} onPress={()=>{
+                <TouchableOpacity style={styles.closeButton} onPress={() => {
                     LayoutAnimation.easeInEaseOut();
                     setLoginType('quick')
                 }}>
@@ -404,7 +414,7 @@ const allStyles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 40,
-        marginTop:12
+        marginTop: 12
     },
     radioButton: {
         width: 20,
