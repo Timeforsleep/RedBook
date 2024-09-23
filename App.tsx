@@ -10,13 +10,13 @@ import {SafeAreaProvider} from "react-native-safe-area-context";
 import {NavigationContainer} from '@react-navigation/native';
 import Welcome from "./src/modules/welcome/Welcome";
 import Login from "./src/modules/login/Login";
-import HomeTab from "./src/modules/home/HomeTab";
+import MainTab from "./src/modules/mainTab/MainTab";
 import {
     SafeAreaView,
     StatusBar,
     StyleSheet,
 } from 'react-native';
-import {createStackNavigator} from "@react-navigation/stack";
+import {createStackNavigator, TransitionPresets} from "@react-navigation/stack";
 
 const Stack = createStackNavigator();
 
@@ -43,11 +43,13 @@ function App(): React.JSX.Element {
                     <Stack.Screen name="Login" component={Login} options={{
                         //TODO
                         headerShown: false,
+                        ...TransitionPresets.SlideFromRightIOS
                     }}
                     />
-                    <Stack.Screen name="HomeTab" component={HomeTab} options={{
+                    <Stack.Screen name="MainTab" component={MainTab} options={{
                         //TODO
                         headerShown: false,
+                        ...TransitionPresets.SlideFromRightIOS
                     }}
                     />
                 </Stack.Navigator>

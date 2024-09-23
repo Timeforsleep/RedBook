@@ -12,7 +12,7 @@ export default ()=>{
                 fontSize:40,
                 color:'#333',
                 fontWeight:'bold',
-            }}>首页</Text>
+            }}>我</Text>
         </View>
     )
 }

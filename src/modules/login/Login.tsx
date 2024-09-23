@@ -343,7 +343,7 @@ export default () => {
                     }
                     UserStore.requestLogin(purePhone, purePwd, (success: boolean) => {
                         if (success) {
-                            navigation.replace('HomeTab')
+                            navigation.replace('MainTab')
                         } else {
                             ToastAndroid.show("登陆失败，请检查用户名和密码", ToastAndroid.LONG)
                         }
