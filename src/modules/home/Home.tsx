@@ -4,13 +4,17 @@ import {
     Image,
     StyleSheet, Text, FlatList, Dimensions
 } from 'react-native'
+import Heart from "../../components/Heart";
 
 import {useLocalStore} from "mobx-react";
 import HomeStore from "./HomeStore";
 import {observer} from "mobx-react";
+import FlowList from '../../components/flowlist/FlowList.js'
+import ResizeImage from "../../components/ResizeImage";
 
 import icon_heart from '../../assets/icon_heart.png'
 import icon_heart_empty from '../../assets/icon_heart_empty.png'
+import {Header} from "@react-navigation/stack";
 
 const {width: SCREEN_WIDTH, height} = Dimensions.get('window');
 
@@ -19,12 +23,12 @@ export default observer(() => {
 
     const store = useLocalStore(() => new HomeStore())
 
-    const refreshNewData = ()=>{
+    const refreshNewData = () => {
         store.resetPage()
         store.requestHomeList();
     }
 
-    const loadMoreData=()=>{
+    const loadMoreData = () => {
         store.requestHomeList();
     }
 
@@ -35,27 +39,47 @@ export default observer(() => {
     const renderItem = ({item, index}: { item: ArticleSimple, index: number }) => {
         return (
             <View style={styles.item}>
-                <Image source={{uri: item.image}} style={styles.itemImg}/>
+                <ResizeImage uri={item.image}/>
                 <Text style={styles.titleTxt}>{item.title}</Text>
                 <View style={styles.nameLayout}>
                     <Image style={styles.avatarImg} source={{uri: item.avatarUrl}}/>
                     <Text style={styles.nameTxt}>{item.userName}</Text>
-                    <Image style={styles.heart} source={icon_heart_empty}/>
+                    <Heart
+                        value={item.isFavorite}
+                        size={20}
+                        onValueChanged={(value: boolean) => {
+                            console.log(value);
+                        }}
+                    />
                     <Text style={styles.countTxt}>{item.favoriteCount}</Text>
                 </View>
             </View>
         )
     }
 
-    const Footer = ()=>{
+    const Footer = () => {
         return (
             <Text style={styles.footerTxt}>没有更多数据</Text>
         )
     }
 
+    const Header = () => {
+        return (
+            <View style={{padding:16}}>
+                {/*<Heart*/}
+                {/*    value={true}*/}
+                {/*    size={100}*/}
+                {/*    onValueChanged={(value: boolean) => {*/}
+                {/*        console.log(value);*/}
+                {/*    }}*/}
+                {/*/>*/}
+            </View>
+        )
+    }
+
     return (
         <View style={styles.root}>
-            <FlatList style={styles.flatList}
+            <FlowList style={styles.flatList}
                       data={store.homeList}
                       renderItem={renderItem}
                       numColumns={2}
@@ -65,8 +89,9 @@ export default observer(() => {
                       onEndReachedThreshold={0.1}
                       onEndReached={loadMoreData}
                       onRefresh={refreshNewData}
-            ListFooterComponent={Footer}>
-            </FlatList>
+                      ListFooterComponent={Footer}
+                      ListHeaderComponent={Header}>
+            </FlowList>
         </View>
     )
 })
@@ -134,12 +159,12 @@ const styles = StyleSheet.create({
         color: '#999',
         marginLeft: 4,
     },
-    footerTxt:{
-        width:'100%',
+    footerTxt: {
+        width: '100%',
         fontSize: 14,
         color: '#999',
-        marginVertical:16,
-        textAlign:'center',
-        textAlignVertical:'center'
+        marginVertical: 16,
+        textAlign: 'center',
+        textAlignVertical: 'center'
     }
 })
