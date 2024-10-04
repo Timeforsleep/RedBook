@@ -1,8 +1,8 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {
     View,
     Image,
-    StyleSheet, Text, FlatList, Dimensions
+    StyleSheet, Text, FlatList, Dimensions, TouchableOpacity
 } from 'react-native'
 import Heart from "../../components/Heart";
 
@@ -15,6 +15,7 @@ import ResizeImage from "../../components/ResizeImage";
 import icon_heart from '../../assets/icon_heart.png'
 import icon_heart_empty from '../../assets/icon_heart_empty.png'
 import {Header} from "@react-navigation/stack";
+import TitleBar from "./components/TitleBar";
 
 const {width: SCREEN_WIDTH, height} = Dimensions.get('window');
 
@@ -23,6 +24,8 @@ export default observer(() => {
 
     const store = useLocalStore(() => new HomeStore())
 
+
+
     const refreshNewData = () => {
         store.resetPage()
         store.requestHomeList();
@@ -30,6 +33,10 @@ export default observer(() => {
 
     const loadMoreData = () => {
         store.requestHomeList();
+    }
+
+    const renderTitle = () => {
+
     }
 
     useEffect(() => {
@@ -65,7 +72,7 @@ export default observer(() => {
 
     const Header = () => {
         return (
-            <View style={{padding:16}}>
+            <View style={{padding: 16}}>
                 {/*<Heart*/}
                 {/*    value={true}*/}
                 {/*    size={100}*/}
@@ -79,6 +86,12 @@ export default observer(() => {
 
     return (
         <View style={styles.root}>
+            <TitleBar
+                tab={1}
+                onTabChanged={(tab:number)=>{
+                    console.log(`tab = ${tab}`)
+                }}
+            />
             <FlowList style={styles.flatList}
                       data={store.homeList}
                       renderItem={renderItem}

@@ -9,7 +9,7 @@ import Home from "../home/Home";
 import Shop from "../shop/Shop";
 import Message from "../message/Message";
 import Mine from "../mine/Mine";
-import {launchImageLibrary, ImageLibraryOptions} from "react-native-image-picker";
+import {launchImageLibrary, ImagePickerResponse} from "react-native-image-picker";
 import icon_tab_publish from "../../assets/icon_tab_publish.png"
 
 
@@ -36,7 +36,7 @@ export default () => {
                 mediaType: 'photo',
                 quality: 1,
                 includeBase64: true,
-            },  (res: ImageLibraryOptions)=> {
+            },  (res: ImagePickerResponse)=> {
                 const {assets} = res
                 if (!assets?.length) {
                     console.log("选择图片失败")
@@ -110,35 +110,40 @@ export default () => {
                     name="Home"
                     component={Home}
                     options={{
-                        title: "首页"
+                        title: "首页",
+                        headerShown:false
                     }}
                 />
                 <ButtonTab.Screen
                     name="Shop"
                     component={Shop}
                     options={{
-                        title: "购物"
+                        title: "购物",
+                        headerShown:false
                     }}
                 />
                 <ButtonTab.Screen
                     name="Publish"
                     component={Shop}
                     options={{
-                        title: "发布"
+                        title: "发布",
+                        headerShown:false
                     }}
                 />
                 <ButtonTab.Screen
                     name="Message"
                     component={Message}
                     options={{
-                        title: "消息"
+                        title: "消息",
+                        headerShown:false
                     }}
                 />
                 <ButtonTab.Screen
                     name="Mine"
                     component={Mine}
                     options={{
-                        title: "我"
+                        title: "我",
+                        headerShown:false
                     }}
                 />
             </ButtonTab.Navigator>
