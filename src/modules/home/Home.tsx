@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {
     View,
     Image,
-    StyleSheet, Text, FlatList, Dimensions, TouchableOpacity
+    StyleSheet, Text, FlatList, Dimensions, TouchableOpacity, ScrollView
 } from 'react-native'
 import Heart from "../../components/Heart";
 
@@ -14,8 +14,9 @@ import ResizeImage from "../../components/ResizeImage";
 
 import icon_heart from '../../assets/icon_heart.png'
 import icon_heart_empty from '../../assets/icon_heart_empty.png'
-import {Header} from "@react-navigation/stack";
 import TitleBar from "./components/TitleBar";
+import icon_arrow from "../../assets/icon_arrow.png"
+import CategoryList from "./components/CategoryList";
 
 const {width: SCREEN_WIDTH, height} = Dimensions.get('window');
 
@@ -23,7 +24,6 @@ const {width: SCREEN_WIDTH, height} = Dimensions.get('window');
 export default observer(() => {
 
     const store = useLocalStore(() => new HomeStore())
-
 
 
     const refreshNewData = () => {
@@ -41,7 +41,10 @@ export default observer(() => {
 
     useEffect(() => {
         store.requestHomeList();
+        store.getCategoryList();
     }, []);
+
+    const categoryList = store.categoryList.filter(i => i.isAdd)
 
     const renderItem = ({item, index}: { item: ArticleSimple, index: number }) => {
         return (
@@ -70,29 +73,17 @@ export default observer(() => {
         )
     }
 
-    const Header = () => {
-        return (
-            <View style={{padding: 16}}>
-                {/*<Heart*/}
-                {/*    value={true}*/}
-                {/*    size={100}*/}
-                {/*    onValueChanged={(value: boolean) => {*/}
-                {/*        console.log(value);*/}
-                {/*    }}*/}
-                {/*/>*/}
-            </View>
-        )
-    }
 
     return (
         <View style={styles.root}>
             <TitleBar
                 tab={1}
-                onTabChanged={(tab:number)=>{
+                onTabChanged={(tab: number) => {
                     console.log(`tab = ${tab}`)
                 }}
             />
             <FlowList style={styles.flatList}
+                      keyExtractor={(item: ArticleSimple) => item.toString()}
                       data={store.homeList}
                       renderItem={renderItem}
                       numColumns={2}
@@ -103,7 +94,12 @@ export default observer(() => {
                       onEndReached={loadMoreData}
                       onRefresh={refreshNewData}
                       ListFooterComponent={Footer}
-                      ListHeaderComponent={Header}>
+                      ListHeaderComponent={<CategoryList
+                          categoryList={categoryList}
+                          allCategoryList={store.categoryList}
+                          onCategoryChange={(category: Category) => {
+                              console.log(JSON.stringify(category));
+                          }}/>}>
             </FlowList>
         </View>
     )
@@ -130,7 +126,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden'
     },
     container: {
-        paddingTop: 6,
+        // paddingTop: 6,
     },
     itemImg: {
         width: '100%',
