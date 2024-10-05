@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
     View,
     Text,
@@ -8,7 +8,7 @@ import {
     TouchableOpacity
 } from 'react-native'
 
-import CategoryModal, { CategoryModalRef } from '../components/CategoryModal';
+import CategoryModal, {CategoryModalRef} from '../components/CategoryModal';
 
 type Props = {
     categoryList: Category[];
@@ -21,16 +21,30 @@ import icon_arrow from '../../../assets/icon_arrow.png';
 export default ({categoryList, allCategoryList, onCategoryChange}: Props) => {
     const modalRef = useRef<CategoryModalRef>(null);
 
+    const [currentCategoryList, setCurrentCategoryList] = useState<Category[]>(categoryList);
     const [category, setCategory] = useState<Category>();
 
     useEffect(() => {
-        setCategory(categoryList.find(i => i.name === '推荐'));
-    }, []);
+        console.log("gyk" + currentCategoryList.length);
+        setCategory(currentCategoryList.find(i => i.name === '推荐'));
+    }, [currentCategoryList]);
+
+    useEffect(() => {
+        console.log("gyk" + categoryList.length);
+        setCurrentCategoryList(categoryList)
+        // setCategory(currentCategoryList.find(i => i.name === '推荐'));
+    }, [categoryList]);
 
     const onCategoryPress = (category: Category) => {
         setCategory(category);
         onCategoryChange?.(category);
-    }
+    };
+
+    // 更新分类列表
+    const handleCategoryUpdate = (updatedList: Category[]) => {
+        // 更新当前显示的分类列表
+        setCurrentCategoryList(updatedList.filter(i => i.isAdd));
+    };
 
     return (
         <View style={styles.container}>
@@ -39,7 +53,7 @@ export default ({categoryList, allCategoryList, onCategoryChange}: Props) => {
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
             >
-                {categoryList.map((item: Category, index: number) => {
+                {currentCategoryList.map((item: Category, index: number) => {
                     const isSelected = item.name === category?.name;
                     return (
                         <TouchableOpacity
@@ -58,12 +72,13 @@ export default ({categoryList, allCategoryList, onCategoryChange}: Props) => {
                     modalRef.current?.show();
                 }}
             >
-                <Image style={styles.openImg} source={icon_arrow} />
+                <Image style={styles.openImg} source={icon_arrow}/>
             </TouchableOpacity>
 
             <CategoryModal
                 ref={modalRef}
                 categoryList={allCategoryList}
+                onCategoryUpdate={handleCategoryUpdate} // 传递回调函数
             />
         </View>
     );

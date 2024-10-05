@@ -6,7 +6,7 @@ import {
 } from 'react-native'
 import Heart from "../../components/Heart";
 
-import {useLocalStore} from "mobx-react";
+import {useLocalObservable, useLocalStore} from "mobx-react";
 import HomeStore from "./HomeStore";
 import {observer} from "mobx-react";
 import FlowList from '../../components/flowlist/FlowList.js'
@@ -23,7 +23,7 @@ const {width: SCREEN_WIDTH, height} = Dimensions.get('window');
 
 export default observer(() => {
 
-    const store = useLocalStore(() => new HomeStore())
+    const store = useLocalObservable(() => new HomeStore())
 
 
     const refreshNewData = () => {

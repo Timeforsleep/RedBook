@@ -19,6 +19,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 type Props = {
     categoryList: Category[];
+    onCategoryUpdate: (updatedList: Category[]) => void; // 新增
 };
 
 export interface CategoryModalRef {
@@ -54,6 +55,8 @@ export default forwardRef((props: Props, ref) => {
 
     const hide = () => {
         setVisible(false);
+        // 调用传递的 onCategoryUpdate，将最新的 myList 返回给父组件
+        props.onCategoryUpdate([...myList, ...otherList]);
     }
 
     useImperativeHandle(ref, () => {

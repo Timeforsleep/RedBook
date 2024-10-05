@@ -1,5 +1,5 @@
 import {request} from "../../utils/request";
-import {action, makeAutoObservable, observable} from "mobx";
+import {action, makeAutoObservable, makeObservable, observable} from "mobx";
 import {load} from "../../utils/Storage";
 
 const SIZE = 10;
@@ -8,7 +8,7 @@ export default class HomeStore {
     page: number = 1
 
     constructor() {
-        makeAutoObservable(this);
+        makeObservable(this);
     }
 
     @observable homeList: ArticleSimple[] = []
@@ -70,6 +70,8 @@ export default class HomeStore {
         }
     }
 }
+
+
 
 const DEFAULT_CATEGORY_LIST: Category[] = [
     // 默认添加频道
